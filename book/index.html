@@ -1,3 +1,10 @@
+
+<!-- 引入样式 -->
+<link rel="stylesheet" href="https://unpkg.com/mint-ui@1/lib/style.css">
+<!-- 引入组件库 -->
+<script src="https://unpkg.com/mint-ui@1/lib/index.js"></script>
+
+<script>
 import { Radio } from 'mint-ui';
 
 Vue.component(Radio.name, Radio);
@@ -34,3 +41,4 @@ this.options = [
   :value.sync="value"
   :options="options">
 </mt-radio>
+</script>
