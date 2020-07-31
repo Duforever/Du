@@ -1,154 +1,142 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>憨憨</title>
-    <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
-    <style>
-        tr{
-            vertical-align: inherit;
+    <script src="https://how2j.cn/study/js/jquery/2.0.0/jquery.min.js"></script>
+    <script src="https://how2j.cn/study/vue.min.js"></script>
+    <style type="text/css">
+        td{
+            border:1px solid gray;
         }
-        .lineHeiht{
-        	line-height: 82px;
+          
+        table{
+            border-collapse:collapse;
         }
-    </style>   
-   		<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
-		<script type="text/javascript" src="js/bootstrap.js"></script>
-		<script type="text/javascript" src="js/vue.js"></script>		
-    <script>    	    	
-        window.onload= function(){
-            var vm = new Vue({
-                el:'.container',
-                data:{
-                    myData:[],
-                    name:'',
-                    author:'',
-                    company:'',
-                    price:'',
-                    page:'',
-                    img:'',
-                },
-                methods:{
-                    add:function(){
-                        this.myData.push({
-                            name:this.name,
-                            author:this.author,
-                            company:this.company,
-                            price:this.price,
-                            page:this.page,
-                            img:this.img,
-                        });
-                        this.name="";
-                        this.author="";
-                        this.company="";
-                        this.price="";
-                        this.page="";
-                        this.img="";
-                    },
-               		reset:function(){
-                        this.name="";
-                        this.author="";
-                        this.company="";
-                        this.price="";
-                        this.page="";
-                        this.img="";
-                    },
-                    del:function(index){
-                        this.myData.splice(index,1)
-                    },
-                    delAll:function(){
-                        this.myData=[];
+      
+        div#app{
+            margin:20px auto;
+            width:400px;
+            padding:20px;
+        }      
+    </style>
+</head>
+  
+<body>
+    <div id="app">
+            <table id="heroListTable" >
+                <thead>
+                    <tr>
+                        <th>英雄名称</th>
+                        <th>血量</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="hero in heros ">
+                        <td>{{hero.name}}</td>
+                        <td>{{hero.hp}}</td>
+                        <td>
+                            <a href="#nowhere" @click="edit(hero)">编辑</a>
+                            <a href="#nowhere" @click="deleteHero(hero.id)">删除</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3">
+                            英雄名称:
+                            <input type="text"    v-model="hero4Add.name" />
+                            <br>
+                            血量：
+                            <input type="number"    v-model="hero4Add.hp" />
+                            <br>
+                            <button type="button"  v-on:click="add">增加</button> 
+                         </td>                  
+                    </tr>
+                </tbody>
+            </table>
+              
+            <div id="div4Update">
+              
+                            英雄名称:
+                            <input type="text"    v-model="hero4Update.name" />
+                            <br>
+                            血量：
+                            <input type="number"    v-model="hero4Update.hp" />                       
+                            <input type="hidden"    v-model="hero4Update.id" />                       
+                            <br>
+                            <button type="button"  v-on:click="update">修改</button>                
+                            <button type="button"  v-on:click="cancel">取消</button>                
+              
+            </div>
+    </div>
+  
+    <script type="text/javascript">
+        //修改区域隐藏起来先
+        $("#div4Update").hide();
+  
+        //Model
+        var data = {
+            heros: [
+            { id: 1, name: '盖伦', hp: 318},
+            { id: 2, name: '提莫', hp: 320},
+            { id: 3, name: '安妮', hp: 419},
+            { id: 4, name: '死歌', hp: 325},
+            { id: 5, name: '米波', hp: 422},
+            ],
+            hero4Add: { id: 0, name: '', hp: '0'},
+            hero4Update: { id: 0, name: '', hp: '0'}
+        };
+          
+        //用于记录最大id值
+        var maxId = 5;
+        //计算最大值
+        for (var i=0;i<data.heros.length;i++){
+            if (data.heros[i].id > maxId)
+                maxId=  this.heros[i].id;
+        }      
+          
+    //ViewModel
+    var vue = new Vue({
+        el: '#app',
+        data: data,
+        methods: {
+            add: function (event) {
+                //获取最大id
+                maxId++;
+                //赋予新id
+                this.hero4Add.id = maxId;
+                if(this.hero4Add.name.length==0)
+                    this.hero4Add.name = "Hero#"+this.hero4Add.id;
+                //把对象加入到数组
+                this.heros.push(this.hero4Add);
+                //让 hero4Add 指向新的对象
+                this.hero4Add = { id: 0, name: '', hp: '0'}
+            },
+            deleteHero: function (id) {
+                console.log("id"+id);
+                for (var i=0;i<this.heros.length;i++){
+                    if (this.heros[i].id == id) {
+                        this.heros.splice(i, 1);
+                        break;
                     }
                 }
-            })
+            },
+            edit: function (hero) {
+                $("#heroListTable").hide();
+                $("#div4Update").show();
+                this.hero4Update = hero;
+            },
+            update:function(){
+                //因为v-model，已经同步修改了，所以只需要进行恢复显示就行了
+                $("#heroListTable").show();
+                $("#div4Update").hide();          
+            },
+            cancel:function(){
+                //其实就是恢复显示
+                $("#heroListTable").show();
+                $("#div4Update").hide();
+            }
         }
-        
+    });
     </script>
-</head>
-<body>	
-    <div class="container">
-        <table class="table table-striped table-hover">
-            <caption><h3>新书速递 </h3></caption>
-            <tr>
-                <td class="text-center">序号</td>
-                <td class="text-center">书名</td>
-                <td class="text-center">作者</td>
-                <td class="text-center">出版社</td>
-                <td class="text-center">定价</td>
-                <td class="text-center">页数</td>
-                <td class="text-center">封面</td>
-                <td class="text-center">操作</td>
-            </tr>
-            <tr v-for="(item,index) in myData">
-                <td class="text-center lineHeiht">{{index+1}}</td>
-                <td class="text-center lineHeiht">{{item.name}}</td>
-                <td class="text-center lineHeiht">{{item.author}}</td>
-                <td class="text-center lineHeiht">{{item.company}}</td>
-                <td class="text-center lineHeiht">{{item.price}}</td>
-                <td class="text-center lineHeiht">{{item.page}}</td>
-                <td class="text-center "><img :src="item.img" class="img-thumbnail" width="60px"/></td>
-                <td class="text-center lineHeiht">
-                    <button class="btn btn-danger btn-sm"
-                        v-on:click="del(index)"
-                        data-toggle="dialog" data-target="#layer"
-                    >删除</button>
-                </td>
-            </tr>
-            <tr v-show="myData.length!=0">
-                <td colspan="8" class="text-right">
-                    <button v-on:click="delAll()" class="btn btn-danger btn-sm">删除全部</button>
-                </td>
-            </tr>            
-            <tr v-show="myData.length==0">
-                <td colspan="8" class="text-center">
-                    <p>暂无数据</p>
-                </td>
-            </tr>
-        </table>
-        <form role="form" >
-            <div class="form-group">
-                <label for="name">书名：</label>
-                <input placeholder="输入用户名" type="text"
-                       v-model="name"
-                       id="name" class="form-control">
-            </div>
-            <div class="form-group">
-                <label for="author">作者：</label>
-                <input placeholder="输入作者" type="text"
-                       v-model="author"
-                       id="author" class="form-control">
-            </div>
-            <div class="form-group">
-                <label for="company">出版社：</label>
-                <input placeholder="输入出版社" type="text"
-                       v-model="company"
-                       id="company" class="form-control">
-            </div>
-            <div class="form-group">
-                <label for="price">定价：</label>
-                <input placeholder="输入定价" type="text"
-                       v-model="price"
-                       id="price" class="form-control">
-            </div>
-            <div class="form-group">
-                <label for="page">页数：</label>
-                <input placeholder="输入页数" type="text"
-                       v-model="page"
-                       id="page" class="form-control">
-            </div>          
-            <div class="form-group">
-                <label for="img">封面：</label>
-                <input placeholder="输入图片链接" type="text"
-                       v-model="img"
-                       id="img" class="form-control">
-            </div>
-            <div class="form-group">
-                <input type="button" class="btn btn-info" v-on:click="add()" value="添加">
-                <input type="button" class="btn btn-info" v-on:click="reset()" value="重置">
-            </div>
-        </form>
-    </div>
-
-
+<div style="height:300px"></div>
 </body>
 </html>
