@@ -2,8 +2,12 @@
 
 <div id="div1">
   
-  <button v-on:click="toggle">切换隐藏显示</button>
-  <div v-if="show"> 默认这一条是看得见的</div> 
+  <button @click="toggle">切换隐藏显示</button>
+  <div v-if="show"> 皮皮是个大憨憨</div> 
+  <div v-if="show"> 皮皮是个大憨憨</div>
+  <div v-if="show"> 皮皮是个大憨憨</div> 
+  <button  v-if="show" @:click="toggle1">切换隐藏显示</button>
+  
     
 </div>
    
@@ -17,6 +21,11 @@ new Vue({
       methods:{
           toggle: function(){
               this.show=!this.show;
+            
+          }
+          toggle1: function(){
+              this.show=!this.show;
+            
           }
       }
     })
